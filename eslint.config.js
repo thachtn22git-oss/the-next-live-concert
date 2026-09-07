@@ -11,6 +11,7 @@ export default [
     languageOptions: {
       ecmaVersion: 2020,
       globals: {
+        URL: 'readonly',
         document: 'readonly',
         import: 'readonly',
         window: 'readonly',

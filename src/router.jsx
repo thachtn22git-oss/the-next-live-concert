@@ -12,6 +12,9 @@ import ProfilePage from './pages/ProfilePage.jsx';
 import RegisterPage from './pages/RegisterPage.jsx';
 import SchedulePage from './pages/SchedulePage.jsx';
 import TicketsPage from './pages/TicketsPage.jsx';
+import ForgotPasswordPage from './pages/ForgotPasswordPage.jsx';
+import ResetPasswordPage from './pages/ResetPasswordPage.jsx';
+import ProtectedRoute from './components/ProtectedRoute.jsx';
 
 export const router = createBrowserRouter([
   {
@@ -27,9 +30,11 @@ export const router = createBrowserRouter([
       { path: 'checkout', element: <CheckoutPage /> },
       { path: 'login', element: <LoginPage /> },
       { path: 'register', element: <RegisterPage /> },
-      { path: 'profile', element: <ProfilePage /> },
-      { path: 'my-tickets', element: <MyTicketsPage /> },
-      { path: 'admin', element: <AdminDashboardPage /> },
+      { path: 'forgot-password', element: <ForgotPasswordPage /> },
+      { path: 'reset-password', element: <ResetPasswordPage /> },
+      { path: 'profile', element: <ProtectedRoute><ProfilePage /></ProtectedRoute> },
+      { path: 'my-tickets', element: <ProtectedRoute><MyTicketsPage /></ProtectedRoute> },
+      { path: 'admin', element: <ProtectedRoute requiredRole="admin"><AdminDashboardPage /></ProtectedRoute> },
     ],
   },
 ]);
