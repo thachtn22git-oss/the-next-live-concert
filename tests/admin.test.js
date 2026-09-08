@@ -1,0 +1,44 @@
+﻿import test from 'node:test';
+import assert from 'node:assert/strict';
+import { formValues, validateAdmin, ticketReference, searchTerm, adminError } from '../src/features/admin/adminModel.js';
+import { createAdminService } from '../src/features/admin/adminService.js';
+test('admin validates artist fields, URLs, dates and inventory in Vietnamese', () => {
+  let v = formValues('artists');
+  assert.ok(validateAdmin('artists',v).errors.name);
+  v = { ...v,name:'Artist',slug:'artist',social_links:'{"web":"javascript:alert(1)"}' };
+  assert.ok(validateAdmin('artists',v).errors.social_links);
+  v.social_links = '{"web":"https://example.com"}';
+  assert.deepEqual(validateAdmin('artists',v).errors,{});
+  const row = { sold_quantity:5,total_quantity:10,name:'VIP',price:100,max_per_order:4,display_order:0 };
+  v = formValues('ticket_types',row); v.total_quantity = 4;
+  assert.ok(validateAdmin('ticket_types',v,row).errors.total_quantity);
+  v.total_quantity = 6; v.sale_start='2026-09-08T20:00'; v.sale_end='2026-09-08T19:00';
+  assert.ok(validateAdmin('ticket_types',v,row).errors.sale_end);
+  v.sale_end='2026-09-08T21:00';
+  const result = validateAdmin('ticket_types',v,row);
+  assert.deepEqual(result.errors,{}); assert.equal(result.data.sale_start,'2026-09-08T13:00:00.000Z');
+  assert.equal('sold_quantity' in result.data,false);
+  assert.ok(validateAdmin('concert_artists',formValues('concert_artists')).errors.artist_id);
+});
+test('check-in accepts token, verification URL and code, rejecting malformed input', () => {
+  const token = '70000000-0000-4000-8000-000000000001';
+  assert.equal(ticketReference(token),token);
+  assert.equal(ticketReference('https://example.com/verify-ticket/' + token + '?a=1'),token);
+  assert.equal(ticketReference('TNL-TKT-' + 'A'.repeat(32)),'TNL-TKT-' + 'A'.repeat(32));
+  assert.equal(ticketReference('https://example.com/anything/' + token),'');
+  assert.equal(ticketReference('bad'),'');
+  assert.equal(adminError({ code:'TA007' }),'Vé đã được sử dụng.');
+  assert.doesNotMatch(adminError({ message:'secret SQL' }),/secret/);
+});
+test('admin order queries paginate, filter and sanitize search; ticket lists exclude bearer tokens', async () => {
+  const calls=[]; const q = { then(resolve) { resolve({ data:[],count:0 }); } };
+  for (const m of ['select','eq','or','ilike','order','range']) q[m] = (...args) => { calls.push([m,...args]); return q; };
+  const service = createAdminService({ from:table => { calls.push(['from',table]); return q; } });
+  await service.list('orders',{ page:2,search:' an@example.com ',status:'pending',payment:'unpaid' });
+  assert.ok(calls.some(c => c[0]==='range' && c[1]===40 && c[2]===59));
+  assert.ok(calls.some(c => c[0]==='eq' && c[1]==='payment_status' && c[2]==='unpaid'));
+  assert.ok(calls.some(c => c[0]==='or' && c[1].includes('customer_phone.ilike.%an@example.com%')));
+  assert.equal(searchTerm('a%,(b)_'),'ab');
+  calls.length=0; await service.list('tickets');
+  assert.doesNotMatch(calls.find(c => c[0]==='select')[1],/verification_token|user_id|customer/);
+});

@@ -1,7 +1,6 @@
 import { createBrowserRouter } from 'react-router-dom';
 import { lazy, Suspense } from 'react';
 import MainLayout from './layouts/MainLayout.jsx';
-import AdminDashboardPage from './pages/AdminDashboardPage.jsx';
 import ArtistDetailPage from './pages/ArtistDetailPage.jsx';
 import ArtistsPage from './pages/ArtistsPage.jsx';
 import ConcertPage from './pages/ConcertPage.jsx';
@@ -15,6 +14,16 @@ import ForgotPasswordPage from './pages/ForgotPasswordPage.jsx';
 import ResetPasswordPage from './pages/ResetPasswordPage.jsx';
 import ProtectedRoute from './components/ProtectedRoute.jsx';
 import DataState from './components/DataState.jsx';
+
+const AdminDashboardPage = lazy(() => import('./pages/AdminDashboardPage.jsx'));
+const AdminLayout = lazy(() => import('./features/admin/AdminLayout.jsx'));
+const ArtistEditor = lazy(() => import('./features/admin/AdminManagement.jsx').then(m => ({ default: m.ArtistEditor })));
+const ConcertManagement = lazy(() => import('./features/admin/AdminManagement.jsx').then(m => ({ default: m.ConcertManagement })));
+const EventManagement = lazy(() => import('./features/admin/AdminManagement.jsx').then(m => ({ default: m.EventManagement })));
+const Management = lazy(() => import('./features/admin/AdminManagement.jsx').then(m => ({ default: m.Management })));
+const AdminOrders = lazy(() => import('./features/admin/AdminOrders.jsx').then(m => ({ default: m.AdminOrders })));
+const AdminOrderDetail = lazy(() => import('./features/admin/AdminOrders.jsx').then(m => ({ default: m.AdminOrderDetail })));
+const AdminCheckIn = lazy(() => import('./features/admin/AdminCheckIn.jsx'));
 
 const CheckoutPage = lazy(() => import('./pages/CheckoutPage.jsx'));
 const OrderSuccessPage = lazy(() => import('./pages/OrderSuccessPage.jsx'));
@@ -45,7 +54,19 @@ export const router = createBrowserRouter([
       { path: 'my-tickets', element: <ProtectedRoute><Suspense fallback={orderLoading}><MyTicketsPage /></Suspense></ProtectedRoute> },
       { path: 'my-tickets/:ticketCode', element: <ProtectedRoute><Suspense fallback={orderLoading}><MyTicketDetailPage /></Suspense></ProtectedRoute> },
       { path: 'verify-ticket/:token', element: <Suspense fallback={orderLoading}><VerifyTicketPage /></Suspense> },
-      { path: 'admin', element: <ProtectedRoute requiredRole="admin"><AdminDashboardPage /></ProtectedRoute> },
+      { path: 'admin', element: <ProtectedRoute requiredRole="admin"><Suspense fallback={orderLoading}><AdminLayout /></Suspense></ProtectedRoute>, children: [
+        { index: true, element: <AdminDashboardPage /> },
+        { path: 'concert', element: <ConcertManagement /> },
+        { path: 'artists', element: <Management table="artists" title="Nghệ sĩ" /> },
+        { path: 'artists/new', element: <ArtistEditor /> },
+        { path: 'artists/:id/edit', element: <ArtistEditor /> },
+        { path: 'schedule', element: <EventManagement table="schedules" title="Lịch trình" /> },
+        { path: 'ticket-types', element: <EventManagement table="ticket_types" title="Hạng vé" /> },
+        { path: 'orders', element: <AdminOrders key="orders" /> },
+        { path: 'orders/:orderCode', element: <AdminOrderDetail /> },
+        { path: 'tickets', element: <AdminOrders key="tickets" tickets /> },
+        { path: 'check-in', element: <AdminCheckIn /> },
+      ] },
     ],
   },
 ]);
