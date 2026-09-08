@@ -29,7 +29,7 @@ export function selectionLimit(ticket, now = Date.now()) {
   return Math.min(ticket.max_per_order, remainingQuantity(ticket));
 }
 
-// A display estimate only. Phase 5 must validate and reserve inventory on the server.
+// A display estimate only. The create_order RPC validates and reserves inventory on the server.
 export function reconcileSelection(quantities, ticketTypes, now = Date.now()) {
   const valid = {};
   for (const ticket of ticketTypes) {

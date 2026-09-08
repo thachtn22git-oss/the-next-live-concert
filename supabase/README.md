@@ -4,6 +4,10 @@ For registration, login, private profiles and password recovery, continue with [
 
 For ticket types and client-side selection, see [Phase 4 ticket setup](TICKETS.md).
 
+For secure checkout and pending/unpaid orders, see [Phase 5 order setup](ORDERS.md).
+
+For paid-order ticket issuance, private digital passes and read-only QR verification, see [Phase 6 digital ticket setup](TICKETS_QR.md).
+
 ## Configure a hosted Supabase project
 
 1. Create a Supabase project, then open its SQL Editor.

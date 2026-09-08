@@ -46,6 +46,10 @@ export default function TicketSelectionProvider({ children, slug = CONCERT_SLUG,
   }, [state.status, state.quantities, slug, storage]);
 
   const setQuantity = useCallback((id, quantity) => dispatch({ type: 'select', id, quantity, now: Date.now() }), []);
+  const clearSelection = useCallback(() => {
+    writeSelection(slug, {}, storage);
+    dispatch({ type: 'clear' });
+  }, [slug, storage]);
   const summary = selectionSummary(state.quantities, state.ticketTypes, state.now);
-  return <TicketSelectionContext.Provider value={{ ...state, summary, refresh, setQuantity }}>{children}</TicketSelectionContext.Provider>;
+  return <TicketSelectionContext.Provider value={{ ...state, summary, refresh, setQuantity, clearSelection }}>{children}</TicketSelectionContext.Provider>;
 }

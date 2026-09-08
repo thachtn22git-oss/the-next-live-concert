@@ -15,6 +15,7 @@ function reconcile(state, ticketTypes, now) {
 
 export function selectionReducer(state, action) {
   switch (action.type) {
+    case 'clear': return { ...state, quantities: {}, notice: '' };
     case 'loading': return { ...state, status: 'loading' };
     case 'loaded': return { ...state, ...action.data, ...reconcile(state, action.data.ticketTypes, action.now), status: 'success' };
     case 'error': return { ...state, status: 'error' };
