@@ -27,7 +27,7 @@ export const router = createBrowserRouter([
       { path: 'artists/:slug', element: <ArtistDetailPage /> },
       { path: 'schedule', element: <SchedulePage /> },
       { path: 'tickets', element: <TicketsPage /> },
-      { path: 'checkout', element: <CheckoutPage /> },
+      { path: 'checkout', element: <ProtectedRoute><CheckoutPage /></ProtectedRoute> },
       { path: 'login', element: <LoginPage /> },
       { path: 'register', element: <RegisterPage /> },
       { path: 'forgot-password', element: <ForgotPasswordPage /> },

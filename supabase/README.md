@@ -2,6 +2,8 @@
 
 For registration, login, private profiles and password recovery, continue with [Phase 3 authentication setup](AUTH.md).
 
+For ticket types and client-side selection, see [Phase 4 ticket setup](TICKETS.md).
+
 ## Configure a hosted Supabase project
 
 1. Create a Supabase project, then open its SQL Editor.

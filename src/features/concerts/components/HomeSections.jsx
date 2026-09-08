@@ -1,6 +1,9 @@
 import { ArrowUpRight, MapPin, Plus } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { tickets, faqs } from '../data/home';
+import { faqs } from '../data/home';
+import { useTicketSelection } from '../../tickets/hooks/useTicketSelection';
+import TicketPass from '../../tickets/components/TicketPass';
+import TicketDataState from '../../tickets/components/TicketDataState';
 import { useConcert } from '../../../hooks/useConcert';
 import ArtistGrid from '../../artists/ArtistGrid';
 import ScheduleList from '../../schedule/ScheduleList';
@@ -27,7 +30,12 @@ export function ScheduleSection() {
   </div></section>;
 }
 export function TicketSection() {
-  return <section className="ticket-band section-space"><div className="site-container"><div className="section-heading"><div><p className="eyebrow">04 / Hạng vé</p><h2>Chọn trải nghiệm<br />của bạn.</h2></div><p className="body-copy max-w-xs">Mỗi vị trí, một cảm xúc riêng.<br />Hạng vé và giá tham khảo. Chưa mở bán.</p></div><div className="ticket-grid">{tickets.map(ticket => <article className={'concert-pass ' + ticket.color} key={ticket.id}><div className="pass-top"><span>THE NEXT / 2026</span><span>{ticket.id}</span></div><h3>{ticket.name}</h3><p className="pass-price">{ticket.price}<span>đ</span></p><ul>{ticket.benefits.map(benefit => <li key={benefit}>{benefit}</li>)}</ul><div className="pass-bottom"><span>21.11 / ĐÀ NẴNG</span><Link to="/tickets" aria-label={'Xem hạng vé ' + ticket.name}><ArrowUpRight size={24} /></Link></div></article>)}</div><Link to="/tickets" className="text-link mt-8">Thông tin mở bán <ArrowUpRight size={18} /></Link></div></section>;
+  const { status, concert, ticketTypes, refresh, now } = useTicketSelection();
+  return <section className="ticket-band section-space"><div className="site-container"><div className="section-heading"><div><p className="eyebrow">04 / Hạng vé</p><h2>Chọn trải nghiệm<br />của bạn.</h2></div><p className="body-copy max-w-xs">Mỗi vị trí, một cảm xúc riêng.<br />{concert?.is_sample ? 'Hạng vé mẫu. Chưa mở bán chính thức.' : 'Chọn hạng vé cho đêm nhạc của bạn.'}</p></div>
+    <TicketDataState status={status} empty={!ticketTypes.length} retry={refresh} />
+    {status === 'success' && ticketTypes.length > 0 && <div className="ticket-grid">{ticketTypes.slice(0, 3).map((ticket, index) => <TicketPass key={ticket.id} ticket={ticket} concert={concert} index={index} now={now} />)}</div>}
+    <Link to="/tickets" className="text-link mt-8">Chọn vé <ArrowUpRight size={18} /></Link>
+  </div></section>;
 }
 export function VenueSection() {
   return <section className="venue-band"><div className="site-container section-space venue-inner"><div><p className="eyebrow">05 / Điểm hẹn</p><h2>ĐÀ NẴNG.</h2><p className="venue-subtitle">Thành phố biển.<br />Một đêm thật khác.</p></div><div className="venue-details"><MapPin size={30} strokeWidth={1.5} /><h3>Hẹn bạn tại Đà Nẵng</h3><p>Thông tin địa điểm sẽ được cập nhật chính thức.</p><p className="mt-6 text-sm">Dự kiến 21 tháng 11, 2026<br />Mở cửa từ 16:00</p></div></div></section>;
