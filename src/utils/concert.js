@@ -25,3 +25,8 @@ export function safePublicUrl(value) {
     return null;
   }
 }
+
+export function formatDateTime(value) {
+  if (!value || Number.isNaN(Date.parse(value))) return "Chưa công bố";
+  return formatConcertDate(value) + " · " + formatConcertTime(value);
+}

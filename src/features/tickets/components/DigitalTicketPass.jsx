@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { ArrowUpRight, CalendarDays, MapPin } from 'lucide-react';
-import { formatConcertDate, formatConcertTime } from '../../../utils/concert';
+import { formatConcertDate, formatConcertTime, formatDateTime } from '../../../utils/concert';
 import { ticketName } from '../utils/tickets';
 import { hasUsableQr, ticketStatusLabel } from '../utils/digitalTickets';
 import TicketQrCode from './TicketQrCode';
@@ -17,6 +17,9 @@ export default function DigitalTicketPass({ ticket, detail = false }) {
     </div>
     <div className="my-6"><p className="text-xs font-bold uppercase">Hạng vé</p><h2 className="mt-2 break-words text-3xl font-bold">{ticketName({ name: ticket.ticket_name, slug: ticket.ticket_name.toLowerCase() })}</h2></div>
     <dl className="mb-6 space-y-4 text-sm">
+      <div><dt className="font-semibold">Sự kiện</dt><dd className="mt-1 break-words">{ticket.concert_name}</dd></div>
+      <div><dt className="font-semibold">Ngày phát hành</dt><dd>{formatDateTime(ticket.issued_at)}</dd></div>
+      {ticket.used_at && <div><dt className="font-semibold">Đã sử dụng</dt><dd>{formatDateTime(ticket.used_at)}</dd></div>}
       <div><dt className="font-semibold">Mã vé</dt><dd className="mt-1 break-all font-mono">{ticket.ticket_code}</dd></div>
       <div><dt className="flex items-center gap-2 font-semibold"><CalendarDays size={16} aria-hidden="true" />Ngày tổ chức</dt><dd className="mt-1">{formatConcertDate(ticket.concert_starts_at)} · {formatConcertTime(ticket.concert_starts_at)}</dd></div>
       <div><dt className="flex items-center gap-2 font-semibold"><MapPin size={16} aria-hidden="true" />Địa điểm</dt><dd className="mt-1 break-words">{ticket.venue || 'Địa điểm sẽ được công bố'}</dd></div>

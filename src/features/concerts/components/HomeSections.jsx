@@ -7,6 +7,7 @@ import TicketDataState from '../../tickets/components/TicketDataState';
 import { useConcert } from '../../../hooks/useConcert';
 import ArtistGrid from '../../artists/ArtistGrid';
 import ScheduleList from '../../schedule/ScheduleList';
+import { formatDateTime } from '../../../utils/concert.js';
 import DataState from '../../../components/DataState';
 
 export function AboutSection() {
@@ -18,7 +19,7 @@ export function ArtistSection() {
   const preview = (featured.length ? featured : artists).slice(0, 2);
   return <section className="artists-band section-space"><div className="site-container"><div className="section-heading"><div><p className="eyebrow">02 / Dàn nghệ sĩ</p><h2>Những âm sắc.<br />Cùng một nhịp đập.</h2></div><div><p className="body-copy max-w-xs">Những cái tên sẽ xuất hiện tại The Next Live Concert đang dần được hé lộ.</p><Link className="text-link mt-5" to="/artists">Xem nghệ sĩ <ArrowUpRight size={18} /></Link></div></div>
     <DataState status={status} empty={!preview.length} retry={retry} emptyMessage="Danh sách nghệ sĩ sẽ sớm được công bố." />
-    {status === 'success' && preview.length > 0 && <ArtistGrid artists={preview} />}
+    {status === 'success' && preview.length > 0 && <ArtistGrid artists={preview} editorial />}
     {concert?.is_sample && <p className="mt-5 text-xs text-muted">Nghệ sĩ hư cấu và hình ảnh minh họa. Danh sách nghệ sĩ chính thức sẽ được công bố sau.</p>}
   </div></section>;
 }
@@ -38,7 +39,8 @@ export function TicketSection() {
   </div></section>;
 }
 export function VenueSection() {
-  return <section className="venue-band"><div className="site-container section-space venue-inner"><div><p className="eyebrow">05 / Điểm hẹn</p><h2>ĐÀ NẴNG.</h2><p className="venue-subtitle">Thành phố biển.<br />Một đêm thật khác.</p></div><div className="venue-details"><MapPin size={30} strokeWidth={1.5} /><h3>Hẹn bạn tại Đà Nẵng</h3><p>Thông tin địa điểm sẽ được cập nhật chính thức.</p><p className="mt-6 text-sm">Dự kiến 21 tháng 11, 2026<br />Mở cửa từ 16:00</p></div></div></section>;
+  const { concert } = useConcert();
+  return <section className="venue-band"><div className="site-container section-space venue-inner"><div><p className="eyebrow">05 / Điểm hẹn</p><h2>{concert?.venue || "ĐIỂM HẸN."}</h2><p className="venue-subtitle">Âm nhạc kết nối.<br />Một đêm thật khác.</p></div><div className="venue-details"><MapPin size={30} strokeWidth={1.5} /><h3>{concert?.name || "The Next Live Concert"}</h3><p>{concert?.venue || "Thông tin địa điểm sẽ được cập nhật chính thức."}</p><p className="mt-6 text-sm">{formatDateTime(concert?.starts_at)} (giờ Việt Nam)</p></div></div></section>;
 }
 export function FAQSection() {
   return <section className="site-container section-space faq-section"><div><p className="eyebrow">06 / Trước giờ lên nhạc</p><h2>Thông tin<br />cần biết.</h2></div><div>{faqs.map(([question, answer]) => <details key={question} className="faq-item"><summary>{question}<Plus size={20} aria-hidden="true" /></summary><p>{answer}</p></details>)}</div></section>;

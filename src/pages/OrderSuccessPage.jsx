@@ -4,6 +4,8 @@ import { useAuth } from '../hooks/useAuth';
 import { useOrder } from '../features/orders/hooks/useOrder';
 import { orderStatuses, paymentStatuses, orderSummary } from '../features/orders/utils/orders';
 import TicketSelectionSummary from '../features/tickets/components/TicketSelectionSummary';
+import OrderExpiration from '../features/orders/components/OrderExpiration.jsx';
+import { formatDateTime } from '../utils/concert.js';
 import DataState from '../components/DataState';
 
 export default function OrderSuccessPage({ service }) {
@@ -20,6 +22,8 @@ export default function OrderSuccessPage({ service }) {
       <h1 className="page-title">{order.status === 'cancelled' ? 'Thông tin đơn đặt vé' : 'Đơn hàng đã được tạo'}</h1>
       <p className="body-copy mt-6">Đơn đặt vé đã được ghi nhận. {order.payment_status === 'unpaid' && 'Đơn hàng chưa được thanh toán.'}</p>
       {(order.status !== 'confirmed' || order.payment_status !== 'paid') && <p className="body-copy mt-4">{order.status === 'cancelled' || order.payment_status === 'refunded' ? 'Đơn hàng không còn đủ điều kiện phát hành vé.' : 'Vé điện tử sẽ được phát hành sau khi đơn hàng được xác nhận thanh toán.'}</p>}
+      <OrderExpiration order={order} onRefresh={retry} />
+      <p className="body-copy mt-4">Ngày tạo: {formatDateTime(order.created_at)}</p>
       <div className="mt-10 grid items-start gap-12 lg:grid-cols-2">
         <dl className="divide-y divide-black/15">
           {[['Mã đơn hàng', order.order_code], ['Người đặt vé', order.customer_name], ['Email', order.customer_email], ['Số điện thoại', order.customer_phone], ['Trạng thái đơn', orderStatuses[order.status] || 'Đang cập nhật'], ['Thanh toán', paymentStatuses[order.payment_status] || 'Đang cập nhật']].map(([label, value]) =>

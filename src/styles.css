@@ -64,12 +64,15 @@ h2 { font-size: 46px; line-height: 1.15; }
 .about-section > .eyebrow { padding-top: 10px; }
 .artists-band { background: #f0f8fc; }
 .section-heading { display: flex; align-items: flex-end; justify-content: space-between; gap: 48px; margin-bottom: 48px; }
-.artist-grid { display: grid; grid-template-columns: 1.35fr 1fr; gap: 48px; align-items: start; }
-.artist-item:nth-child(2) { margin-top: 100px; }
-.artist-image-wrap { position: relative; aspect-ratio: 1.3; overflow: hidden; background: #b5e3fa; }
-.artist-image-wrap img { width: 100%; height: 100%; object-fit: cover; transition: transform .5s; }
-.artist-item:hover img { transform: scale(1.025); }
-.artist-status { position: absolute; bottom: 20px; left: 20px; padding: 9px 14px; background: #ffd92f; font-size: 12px; font-weight: 600; }
+.artist-grid { display: grid; width: 100%; max-width: 1100px; margin-inline: auto; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 48px; align-items: start; }
+.artist-grid--editorial { max-width: none; grid-template-columns: 1.35fr 1fr; }
+.artist-grid--editorial > .artist-item:nth-child(2) { margin-top: 100px; }
+/* Preserve the complete composition; only the grid controls image width. */
+.artist-image-wrap { width: 100%; min-width: 0; max-width: 100%; align-self: start; background: #b5e3fa; }
+.artist-image-wrap > img { display: block; width: 100%; max-width: 100%; height: auto; object-fit: contain; }
+.artist-image-fallback { width: 100%; aspect-ratio: 4 / 3; margin: 0; text-align: center; }
+.artist-image-detail { max-width: 640px; }
+.artist-status { display: inline-block; max-width: calc(100% - 24px); margin: 12px; padding: 9px 14px; background: #ffd92f; font-size: 12px; font-weight: 600; overflow-wrap: anywhere; }
 .artist-caption { display: flex; gap: 22px; margin-top: 22px; }
 .artist-caption > span { font-size: 14px; color: #686868; }
 .artist-caption h3 { margin-top: 8px; font-size: 25px; }
@@ -118,7 +121,7 @@ h2 { font-size: 46px; line-height: 1.15; }
 .hero-content { padding-top: 20px; padding-bottom: 30px; } .hero-topline { margin-bottom: 30px; font-size: 10px; } .hero-topline span:last-child { display: none; }
 .hero h1 { font-size: 42px; margin: 18px 0 25px; line-height: 1.04; } .hero-copy { font-size: 16px; } .hero-bottom { flex-direction: column; align-items: flex-start; gap: 26px; } .hero-date { text-align: left; display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 16px; } .hero-date > span { font-size: 24px; } .hero-date p { font-size: 13px; } .hero-date small { font-size: 10px; }
 .hero-bottom .button { padding: 12px 16px; font-size: 12px; } .countdown-inner { flex-direction: column; align-items: flex-start; gap: 20px; } .countdown { width: 100%; grid-template-columns: repeat(4,minmax(0,1fr)); } .countdown strong { font-size: 30px; }
-h2 { font-size: 32px; } .section-space { padding-top: 60px; padding-bottom: 60px; } .about-section,.schedule-section,.faq-section,.venue-inner { grid-template-columns: 1fr; gap: 28px; } .section-heading { flex-direction: column; align-items: flex-start; gap: 24px; margin-bottom: 30px; } .artist-grid { grid-template-columns: 1fr; gap: 36px; } .artist-item:nth-child(2) { margin-top: 0; margin-left: 36px; } .artist-caption h3 { font-size: 22px; } .ticket-grid { grid-template-columns: 1fr; gap: 24px; } .concert-pass { padding: 28px; } .concert-pass h3 { font-size: 30px; margin-top: 28px; } .pass-price { font-size: 36px; } .concert-pass ul { min-height: 0; }
+h2 { font-size: 32px; } .section-space { padding-top: 60px; padding-bottom: 60px; } .about-section,.schedule-section,.faq-section,.venue-inner { grid-template-columns: 1fr; gap: 28px; } .section-heading { flex-direction: column; align-items: flex-start; gap: 24px; margin-bottom: 30px; } .artist-grid { grid-template-columns: 1fr; gap: 36px; } .artist-grid--editorial > .artist-item:nth-child(2) { margin-top: 0; margin-left: 36px; } .artist-caption h3 { font-size: 22px; } .ticket-grid { grid-template-columns: 1fr; gap: 24px; } .concert-pass { padding: 28px; } .concert-pass h3 { font-size: 30px; margin-top: 28px; } .pass-price { font-size: 36px; } .concert-pass ul { min-height: 0; }
 .venue-inner h2 { font-size: 54px; } .venue-subtitle { font-size: 22px; } .venue-details { border-left: 0; border-top: 1px solid #08080840; padding: 28px 0 0; } .footer-main { align-items: flex-start; flex-direction: column; } .page-title { font-size: 36px; }
 }
 @media(prefers-reduced-motion:reduce) { *,*::before,*::after { transition: none !important; animation: none !important; } }
@@ -165,3 +168,48 @@ h2 { font-size: 32px; } .section-space { padding-top: 60px; padding-bottom: 60px
 .admin-ticket-used,.admin-ticket-cancelled { border-left:6px solid #ff3366; }
 .admin-result,.admin-total { font-size:20px; font-weight:700; margin:24px 0; }
 @media(max-width:639px) { .admin-fields,.admin-stats { grid-template-columns:1fr; } .admin-form { padding:16px; } .admin-nav a { padding:10px; } .admin-account { overflow-wrap:anywhere; } }
+
+/* Phase 7.5: keep long data contained and controls usable on narrow screens. */
+main, fieldset, .admin-section, .admin-fields > div, .hero-bottom > div, .section-heading > div { min-width:0; }
+fieldset { min-inline-size:0; }
+.hero-date { max-width:45%; flex-shrink:1; overflow-wrap:anywhere; }
+.hero-topline span { overflow-wrap:anywhere; }
+.hero-date > span { font-size:clamp(20px,2.4vw,36px); }
+.venue-inner h2 { font-size:clamp(32px,5vw,70px); overflow-wrap:anywhere; }
+.venue-details,.body-copy,.artist-caption h3,.schedule-list h3 { overflow-wrap:anywhere; }
+.admin-shell .admin-table-wrap { width:100%; max-width:100%; overscroll-behavior-inline:contain; }
+.admin-shell .admin-table-wrap:focus-visible { outline-offset:2px; }
+.admin-shell .admin-account a { overflow-wrap:anywhere; max-width:100%; }
+.admin-shell input,.admin-shell select,.admin-shell textarea { min-width:0; max-width:100%; font-size:16px; }
+.admin-filters > label { overflow-wrap:anywhere; }
+.admin-shell .admin-filters input { min-width:min(220px,100%); }
+.feedback { padding:20px; border:1px solid #bbb; border-left:4px solid #23d4d8; background:#f0f8fc; border-radius:5px; margin:20px 0; line-height:1.7; overflow-wrap:anywhere; }
+.feedback-error { border-left-color:#ba2047; background:#fff1f4; color:#871435; }
+.feedback-success { border-left-color:#08706b; }
+.artist-upload { margin:24px 0; padding-bottom:24px; border-bottom:1px solid #bbb; }
+.artist-upload > label { display:block; font-weight:600; margin-bottom:10px; }
+.artist-upload > p { margin:12px 0; font-size:14px; }
+.artist-upload-preview { width:260px; max-width:100%; margin:16px 0; }
+.artist-upload-preview .artist-image-wrap > img { max-height: 360px; object-fit: contain; }
+.admin-shell td:nth-last-child(2),.admin-shell td:nth-last-child(3) { line-height:1.6; }
+.admin-shell button,.text-link { min-height:44px; }
+@media(max-width:900px) {
+  .hero h1 { font-size:clamp(40px,8vw,76px); }
+  .hero-bottom { flex-wrap:wrap; }
+  .hero-date { max-width:100%; text-align:left; }
+  .venue-inner { grid-template-columns:1fr; }
+  .venue-details { border-left:0; border-top:1px solid #08080840; padding:24px 0 0; }
+  .ticket-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+}
+@media(max-width:639px) {
+  .ticket-grid { grid-template-columns:1fr; }
+  .hero-date { width:100%; }
+  .hero-topline { gap:12px; }
+  .admin-filters > input,.admin-filters > select,.admin-filters > button { width:100%; flex-basis:100%; }
+  .admin-pagination { align-items:flex-start; }
+  .schedule-list li { gap:16px; }
+  .schedule-list time { font-size:18px; flex-shrink:0; }
+  .admin-shell .admin-stats strong { font-size:26px; }
+}
+.status-badge { display:inline-block; padding:5px 9px; background:#f0f8fc; color:#253743; border:1px solid #becdd5; border-radius:4px; font-size:12px; font-weight:600; }
+.text-link:hover { color:#a8183c; }

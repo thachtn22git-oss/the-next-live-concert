@@ -3,8 +3,8 @@ import { ArrowUpRight } from 'lucide-react';
 import ArtistImage from '../../components/ArtistImage';
 import { formatConcertTime } from '../../utils/concert';
 
-export default function ArtistGrid({ artists }) {
-  return <div className="artist-grid">{artists.map((artist, index) => <article key={artist.id} className="artist-item min-w-0">
+export default function ArtistGrid({ artists, editorial = false }) {
+  return <div className={editorial ? 'artist-grid artist-grid--editorial' : 'artist-grid'}>{artists.map((artist, index) => <article key={artist.id} className="artist-item min-w-0">
     <ArtistImage artist={artist}><span className="artist-status">{artist.billing || 'Nghệ sĩ'}</span></ArtistImage>
     <div className="artist-caption"><span>{String(index + 1).padStart(2, '0')}</span><div className="min-w-0">
       <p className="eyebrow">{artist.billing || 'Nghệ sĩ'}</p>

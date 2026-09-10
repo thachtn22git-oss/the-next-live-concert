@@ -1,9 +1,11 @@
+import { formatVnd } from '../tickets/utils/tickets.js';
+import { formatDateTime } from '../../utils/concert.js';
 import { isVerificationToken } from '../tickets/utils/digitalTickets.js';
 
 export const orderLabels = { pending: 'Chờ xử lý', confirmed: 'Đã xác nhận', cancelled: 'Đã hủy' };
 export const paymentLabels = { unpaid: 'Chưa thanh toán', paid: 'Đã thanh toán', failed: 'Thất bại', refunded: 'Đã hoàn tiền' };
-export const money = value => new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(value || 0);
-export const date = value => value ? new Date(value).toLocaleString('vi-VN', { timeZone: 'Asia/Ho_Chi_Minh' }) : '—';
+export const money = value => formatVnd(value || 0);
+export const date = formatDateTime;
 export function ticketReference(input) {
   let value = input.trim();
   if (/^https?:\/\//i.test(value)) {
@@ -18,7 +20,7 @@ export function adminError(error) {
 
 export const fields = {
   concerts: [['name','Tên sự kiện'],['venue','Địa điểm'],['description','Mô tả','textarea'],['starts_at','Bắt đầu','datetime-local'],['ends_at','Kết thúc','datetime-local'],['is_published','Công khai','checkbox']],
-  artists: [['name','Tên nghệ sĩ'],['slug','Đường dẫn'],['genre','Thể loại'],['biography','Tiểu sử','textarea'],['image_url','Đường dẫn ảnh','url'],['image_alt','Mô tả ảnh'],['social_links','Liên kết mạng xã hội (JSON)','textarea'],['is_published','Công khai','checkbox']],
+  artists: [['name','Tên nghệ sĩ'],['slug','Đường dẫn nghệ sĩ'],['genre','Thể loại'],['biography','Tiểu sử','textarea'],['image_url','Ảnh nghệ sĩ','hidden'],['image_alt','Mô tả ảnh'],['social_links','Liên kết mạng xã hội (JSON)','textarea'],['is_published','Công khai','checkbox']],
   schedules: [['title','Tiêu đề'],['artist_id','Nghệ sĩ','select'],['stage','Sân khấu'],['description','Mô tả','textarea'],['starts_at','Bắt đầu','datetime-local'],['ends_at','Kết thúc','datetime-local'],['is_published','Công khai','checkbox']],
   ticket_types: [['name','Tên hạng vé'],['description','Mô tả','textarea'],['price','Giá vé','number'],['total_quantity','Tổng số vé','number'],['max_per_order','Tối đa mỗi đơn','number'],['sale_start','Mở bán','datetime-local'],['sale_end','Đóng bán','datetime-local'],['is_active','Đang mở bán','checkbox'],['display_order','Thứ tự','number']],
   concert_artists: [['artist_id','Nghệ sĩ','select'],['display_order','Thứ tự','number'],['billing','Vai trò biểu diễn'],['is_featured','Nghệ sĩ nổi bật','checkbox']],
@@ -46,7 +48,7 @@ export function validateAdmin(table, values, row = {}) {
     } else value = String(value ?? '').trim();
     if (['name','title','slug','starts_at','ends_at'].includes(key) && !value) errors[key] = 'Vui lòng điền thông tin này.';
     if (key === 'slug' && !/^[a-z0-9]+(-[a-z0-9]+)*$/.test(value)) errors[key] = 'Chỉ dùng chữ thường không dấu, số và dấu gạch ngang.';
-    if (key === 'image_url') { if (value && !safeUrl(value)) errors[key] = 'Nhập đường dẫn http hoặc https hợp lệ.'; value ||= null; }
+    if (key === 'image_url') { if (value && !safeUrl(value)) errors[key] = 'Ảnh chưa có địa chỉ lưu trữ hợp lệ. Vui lòng tải ảnh lên lại.'; value ||= null; }
     if (key === 'artist_id') { if (!value && table === 'concert_artists') errors[key] = 'Vui lòng chọn nghệ sĩ.'; value ||= null; }
     if (key === 'social_links') {
       try { value = JSON.parse(value); if (!value || Array.isArray(value) || typeof value !== 'object' || Object.values(value).some(url => !safeUrl(url))) throw new Error(); }

@@ -1,4 +1,3 @@
-export const eventDate = '2026-11-21T16:00:00+07:00';
 export const concertImage = 'https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?auto=format&fit=crop&w=2200&q=85';
 export const faqs = [
   ['Khi nào vé được mở bán?', 'Thời gian mở bán chính thức sẽ được công bố tại đây. Các hạng vé và mức giá hiện tại chỉ mang tính tham khảo.'],

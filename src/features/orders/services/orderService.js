@@ -1,7 +1,7 @@
 import { supabase } from '../../../lib/supabase.js';
 import { normalizeEmail } from '../../auth/validation.js';
 
-const orderFields = 'id, order_code, customer_name, customer_email, customer_phone, status, payment_status, total_quantity, total_amount, created_at, order_items(ticket_type_id, ticket_name, quantity, unit_price, subtotal)';
+const orderFields = 'id, order_code, customer_name, customer_email, customer_phone, status, payment_status, total_quantity, total_amount, created_at, expires_at, expired_at, order_items(ticket_type_id, ticket_name, quantity, unit_price, subtotal)';
 
 export function createOrderService(client = supabase) {
   function requireClient() {

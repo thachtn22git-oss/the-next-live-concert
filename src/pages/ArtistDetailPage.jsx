@@ -20,7 +20,7 @@ export default function ArtistDetailPage() {
     <DataState status={status} empty={!artist} retry={retry} emptyMessage="Không tìm thấy nghệ sĩ trong chương trình hiện tại." />
     {status === 'success' && artist && <>
       <div className="grid gap-10 md:grid-cols-2 md:gap-16">
-        <ArtistImage artist={artist} />
+        <ArtistImage artist={artist} className="artist-image-detail" />
         <div className="min-w-0"><p className="eyebrow">{artist.billing || 'Nghệ sĩ'}</p><h1 className="page-title">{artist.name}</h1>
           <p className="mt-4 font-semibold">{artist.genre || 'Thể loại sẽ được cập nhật'}</p>
           <p className="body-copy mt-6 whitespace-pre-line break-words">{artist.biography || 'Tiểu sử nghệ sĩ sẽ sớm được cập nhật.'}</p>

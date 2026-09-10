@@ -2,7 +2,7 @@ import { supabase } from '../../../lib/supabase.js';
 import { isVerificationToken } from '../utils/digitalTickets.js';
 
 export const DIGITAL_TICKET_PAGE_SIZE = 24;
-const fields = 'ticket_code, verification_token, concert_id, concert_name, concert_starts_at, venue, ticket_name, status, issued_at, order:orders(order_code, status, payment_status)';
+const fields = 'ticket_code, verification_token, concert_id, concert_name, concert_starts_at, venue, ticket_name, status, issued_at, used_at, order:orders(order_code, status, payment_status)';
 
 export function createDigitalTicketService(client = supabase) {
   function requireClient() {
