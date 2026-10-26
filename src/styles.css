@@ -213,3 +213,34 @@ fieldset { min-inline-size:0; }
 }
 .status-badge { display:inline-block; padding:5px 9px; background:#f0f8fc; color:#253743; border:1px solid #becdd5; border-radius:4px; font-size:12px; font-weight:600; }
 .text-link:hover { color:#a8183c; }
+
+/* Home artist slideshow. Keep the full poster visible in the selected slide. */
+.artist-carousel { min-width:0; }
+.artist-carousel-stage { position:relative; height:clamp(320px,46vw,660px); overflow:hidden; isolation:isolate; }
+.artist-carousel-slide { position:absolute; top:0; width:42%; height:100%; transition:left .55s ease,transform .55s ease,opacity .55s ease,filter .55s ease; pointer-events:none; }
+.artist-carousel-slide .artist-image-wrap { height:100%; background:transparent; }
+.artist-carousel-slide .artist-image-wrap > img { height:100%; width:100%; object-fit:contain; }
+.artist-carousel-slide .artist-image-fallback { height:100%; background:#b5e3fa; }
+.artist-carousel-slide--0 { left:50%; transform:translateX(-50%); opacity:1; filter:none; z-index:3; }
+.artist-carousel-slide--1 { left:76%; transform:translateX(-50%) scale(.78); opacity:.45; filter:blur(1.5px); z-index:2; }
+.artist-carousel-slide---1 { left:24%; transform:translateX(-50%) scale(.78); opacity:.45; filter:blur(1.5px); z-index:2; }
+.artist-carousel-slide--2 { left:94%; transform:translateX(-50%) scale(.56); opacity:.22; filter:blur(3px); z-index:1; }
+.artist-carousel-slide---2 { left:6%; transform:translateX(-50%) scale(.56); opacity:.22; filter:blur(3px); z-index:1; }
+.artist-carousel-slide--hidden { left:115%; transform:translateX(-50%) scale(.4); opacity:0; visibility:hidden; }
+.artist-carousel-arrow { position:absolute; top:50%; transform:translateY(-50%); z-index:5; display:grid; place-items:center; width:54px; height:54px; border:1px solid #08080830; border-radius:50%; background:#ffffffed; box-shadow:0 4px 20px #08080814; transition:background .2s,color .2s; }
+.artist-carousel-arrow--previous { left:12px; }
+.artist-carousel-arrow--next { right:12px; }
+.artist-carousel-arrow:hover:not(:disabled) { background:#080808; color:white; }
+.artist-carousel-arrow:disabled { opacity:.3; cursor:default; }
+@media(max-width:639px) {
+  .artist-carousel-stage { height:390px; height:clamp(280px,100vw,480px); }
+  .artist-carousel-slide { width:62%; }
+  .artist-carousel-slide--0 { left:50%; }
+  .artist-carousel-slide--1 { left:89%; transform:translateX(-50%) scale(.7); }
+  .artist-carousel-slide---1 { left:11%; transform:translateX(-50%) scale(.7); }
+  .artist-carousel-slide--2 { left:116%; transform:translateX(-50%) scale(.5); }
+  .artist-carousel-slide---2 { left:-16%; transform:translateX(-50%) scale(.5); }
+  .artist-carousel-arrow { width:44px; height:44px; }
+  .artist-carousel-arrow--previous { left:4px; }
+  .artist-carousel-arrow--next { right:4px; }
+}

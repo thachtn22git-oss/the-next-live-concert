@@ -5,7 +5,7 @@ import { useTicketSelection } from '../../tickets/hooks/useTicketSelection';
 import TicketPass from '../../tickets/components/TicketPass';
 import TicketDataState from '../../tickets/components/TicketDataState';
 import { useConcert } from '../../../hooks/useConcert';
-import ArtistGrid from '../../artists/ArtistGrid';
+import ArtistCarousel from '../../artists/ArtistCarousel';
 import ScheduleList from '../../schedule/ScheduleList';
 import { formatDateTime } from '../../../utils/concert.js';
 import DataState from '../../../components/DataState';
@@ -15,11 +15,9 @@ export function AboutSection() {
 }
 export function ArtistSection() {
   const { status, artists, concert, retry } = useConcert();
-  const featured = artists.filter(artist => artist.is_featured);
-  const preview = (featured.length ? featured : artists).slice(0, 2);
   return <section className="artists-band section-space"><div className="site-container"><div className="section-heading"><div><p className="eyebrow">02 / Dàn nghệ sĩ</p><h2>Những âm sắc.<br />Cùng một nhịp đập.</h2></div><div><p className="body-copy max-w-xs">Những cái tên sẽ xuất hiện tại The Next Live Concert đang dần được hé lộ.</p><Link className="text-link mt-5" to="/artists">Xem nghệ sĩ <ArrowUpRight size={18} /></Link></div></div>
-    <DataState status={status} empty={!preview.length} retry={retry} emptyMessage="Danh sách nghệ sĩ sẽ sớm được công bố." />
-    {status === 'success' && preview.length > 0 && <ArtistGrid artists={preview} editorial />}
+    <DataState status={status} empty={!artists.length} retry={retry} emptyMessage="Danh sách nghệ sĩ sẽ sớm được công bố." />
+    {status === 'success' && artists.length > 0 && <ArtistCarousel artists={artists} />}
     {concert?.is_sample && <p className="mt-5 text-xs text-muted">Nghệ sĩ hư cấu và hình ảnh minh họa. Danh sách nghệ sĩ chính thức sẽ được công bố sau.</p>}
   </div></section>;
 }

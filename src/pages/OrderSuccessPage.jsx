@@ -7,6 +7,7 @@ import TicketSelectionSummary from '../features/tickets/components/TicketSelecti
 import OrderExpiration from '../features/orders/components/OrderExpiration.jsx';
 import { formatDateTime } from '../utils/concert.js';
 import DataState from '../components/DataState';
+import ManualPayment from '../features/orders/components/ManualPayment.jsx';
 
 export default function OrderSuccessPage({ service }) {
   const { orderCode } = useParams();
@@ -30,6 +31,7 @@ export default function OrderSuccessPage({ service }) {
             <div key={label} className="py-4"><dt className="text-sm text-muted">{label}</dt><dd className="mt-2 break-words font-semibold">{value}</dd></div>)}
         </dl><TicketSelectionSummary summary={orderSummary(order)} />
       </div>
+      <ManualPayment key={order.order_code} order={order} onRefresh={retry} />
       <div className="mt-10 flex flex-wrap gap-6"><Link to="/my-tickets" className="button button-pink">Xem vé của tôi <ArrowRight size={18} /></Link><Link to="/" className="text-link"><Home size={18} />Về trang chủ</Link></div>
     </>}
   </section>;
